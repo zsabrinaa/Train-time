@@ -8,57 +8,58 @@ var config = {
 };
 firebase.initializeApp(config);
 var database = firebase.database();
-var name = "";
-var destination = "";
-var nextArrival = "";
-var minAway = "";
+
 
 $("#submit-btn").on("click", function (event) {
+
     event.preventDefault();
-    name = $("#name").val().trim();
-    destination = $("#destination").val().trim();
-    frequency  = $("#frequency ").val().trim();
-    nextArrival = $("#firstTime").val().trim();
-    minAway = $("#frequency ").val().trim();
-    console.log(name)
-    console.log(role)
+    var name = $("#name").val().trim();
+    var destination = $("#destination").val().trim();
+    var frequency = $("#frequency").val().trim();
+    var firstTime = $("#firstTime").val().trim();
+    console.log(name);
+    console.log(destination);
+    console.log(frequency);
+    console.log(firstTime);
+
+
+
     database.ref().push({
         name: name,
         destination: destination,
-        nextArrival:nextArrival,
         frequency: frequency,
-        minAway:minAway,
-        dateAdded: firebase.database.ServerValue.TIMESTAMP
+        firstTime: firstTime,
 
     })
 })
 database.ref().on("child_added", function (childSnapshot) {
-    console.log(childSnapshot.val().name);
-    console.log(childSnapshot.val().destination);
-    console.log(childSnapshot.val().firstTime);
-    console.log(childSnapshot.val().frequency);
-    console.log(childSnapshot.val().dateAdded);
-    var randomTime = (childSnapshot.val().firstTime);
-    var randomFormatTime = "HH:mm";
-    var convertedTime = moment(randomTime, randomFormatTime);
+    console.log(childSnapshot.val());
+    var tFrequency = childSnapshot.val().frequency;
+    firstTime = moment(childSnapshot.val().firstTime, "hhmm").format("hh:mm");
+    console.log(firstTime)
+    var firstTimeConverted = moment(firstTime, "HH:mm").subtract(1, "years");
+    console.log(firstTimeConverted);
+    var currentTime = moment();
+    console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+    var diffTime = moment().diff((firstTimeConverted), "minutes");
+    console.log("DIFFERENCE IN TIME: " + diffTime);
+    var tRemainder = diffTime % tFrequency;
+    console.log(tRemainder);
+    var tMinutesTillTrain = tFrequency - tRemainder;
+    console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
+    var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+    console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
 
-    console.log(convertedDate.diff(moment(), "months"));
 
-    $("#member-list").append("<tr><td>" + childSnapshot.val().name + 
-    "</td><td>" + childSnapshot.val().role + 
-    "</td><td>" + childSnapshot.val().startDate + 
-    "</td><td>" + (moment().diff(randomDate,"months"))+
-    "</td><td>" + childSnapshot.val().rate + 
-    "</td><td>" + childSnapshot.val().totalBilled+ 
-    "</td></tr>");
+    console.log(tFrequency)
+
+    $("#train-list").append("<tr><td>" + childSnapshot.val().name +
+        "</td><td>" + childSnapshot.val().destination +
+        "</td><td>" + childSnapshot.val().frequency +
+
+        "</td><td>" + (nextTrain).format("hh:mm") +
+        "</td><td>" + tMinutesTillTrain +
+        "</td></tr>");
 }, function (errorObject) {
     console.log("Errors handled: " + errorObject.code);
 });
-//   database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function(snapshot) {
-//     // Change the HTML to reflect
-//     $("#name-display").text(snapshot.val().name);
-//     $("#email-display").text(snapshot.val().email);
-//     $("#age-display").text(snapshot.val().age);
-//     $("#comment-display").text(snapshot.val().comment);
-//   });
-
