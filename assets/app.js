@@ -9,40 +9,38 @@ var config = {
 firebase.initializeApp(config);
 var database = firebase.database();
 var name = "";
-var role = "";
-var startDate = "";
-var monthWork = "";
-var rate = "";
-var totalBilled = "";
+var destination = "";
+var nextArrival = "";
+var minAway = "";
 
 $("#submit-btn").on("click", function (event) {
     event.preventDefault();
     name = $("#name").val().trim();
-    role = $("#role").val().trim();
-    startDate = $("#start-date").val().trim();
-    rate = $("#monthly-rate").val().trim();
+    destination = $("#destination").val().trim();
+    frequency  = $("#frequency ").val().trim();
+    nextArrival = $("#firstTime").val().trim();
+    minAway = $("#frequency ").val().trim();
     console.log(name)
     console.log(role)
     database.ref().push({
         name: name,
-        role: role,
-        startDate: startDate,
-        monthWork: monthWork,
-        rate: rate,
-        totalBilled: totalBilled,
+        destination: destination,
+        nextArrival:nextArrival,
+        frequency: frequency,
+        minAway:minAway,
         dateAdded: firebase.database.ServerValue.TIMESTAMP
 
     })
 })
 database.ref().on("child_added", function (childSnapshot) {
     console.log(childSnapshot.val().name);
-    console.log(childSnapshot.val().role);
-    console.log(childSnapshot.val().startDate);
-    console.log(childSnapshot.val().rate);
+    console.log(childSnapshot.val().destination);
+    console.log(childSnapshot.val().firstTime);
+    console.log(childSnapshot.val().frequency);
     console.log(childSnapshot.val().dateAdded);
-    var randomDate = (childSnapshot.val().startDate);
-    var randomFormat = "MM/DD/YYYY";
-    var convertedDate = moment(randomDate, randomFormat);
+    var randomTime = (childSnapshot.val().firstTime);
+    var randomFormatTime = "HH:mm";
+    var convertedTime = moment(randomTime, randomFormatTime);
 
     console.log(convertedDate.diff(moment(), "months"));
 
