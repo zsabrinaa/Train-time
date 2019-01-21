@@ -1,7 +1,19 @@
 body{
     background-image: url(images/bg.jpg);
     font-family: 'Cinzel', serif;
+    font-weight: bold;
 }
 .table{
     color: yellow;
+}
+#submit-btn{
+    background-color: yellow;
+    color: darkred;
+    border-color: darkred;
+}
+.card-header{
+    color: darkred
+}
+.jumbotron{
+    color: darkred
 }
